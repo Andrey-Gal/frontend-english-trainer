@@ -99,3 +99,22 @@ body.dark button {
 body.dark footer {
     background-color: #111;
 }
+
+#wordDisplay {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#speakBtn {
+  border: none;
+  background: #eef5ff;
+  color: #1f6feb;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform .06s ease;
+}
+#speakBtn:hover { transform: translateY(-1px); }
+#speakBtn:active { transform: translateY(0); }
