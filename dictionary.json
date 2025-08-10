@@ -43,12 +43,12 @@
   {"en":"build","ipa":"/bɪld/","ru":"сборка"},
   {"en":"bundle","ipa":"/ˈbʌndl/","ru":"бандл"},
   {"en":"deploy","ipa":"/dɪˈplɔɪ/","ru":"деплой"},
-  {"en":"repository","ipa":"/rɪˈpɒzɪtəri/","ru":"репозиторий"},
+  {"en":"repository","ipa":"/рɪˈpɒzɪtəri/","ru":"репозиторий"},
   {"en":"commit","ipa":"/kəˈmɪt/","ru":"коммит"},
   {"en":"branch","ipa":"/brɑːntʃ/","ru":"ветка"},
   {"en":"merge","ipa":"/mɜːdʒ/","ru":"слияние"},
-  {"en":"conflict","ipa":"/ˈkɒnflɪkt/","ru":"конфликт"},
-  {"en":"remote","ipa":"/rɪˈməʊt/","ru":"удалённый (remote)"},
+  {"en":"conflict","ipa":"/ˈkɒnflɪкт/","ru":"конфликт"},
+  {"en":"remote","ipa":"/rɪˈməʊt/","ru":"удалённый"},
   {"en":"push","ipa":"/pʊʃ/","ru":"отправить (push)"},
   {"en":"pull","ipa":"/pʊl/","ru":"получить (pull)"}
 ]

@@ -23,93 +23,18 @@
     <button id="newWordBtn" class="btn btn-primary">Новое слово</button>
 
     <div id="wordDisplay">
-  <h3 id="englishWord">---</h3>
-  <button id="speakBtn" title="Произнести слово" aria-label="Произнести слово">🔊</button>
-  <p id="transcription">---</p>
-  <p id="translation">---</p>
-</div>
-
+      <h3 id="englishWord">---</h3>
+      <button id="speakBtn" title="Произнести слово" aria-label="Произнести слово">🔊</button>
+      <p id="transcription">---</p>
+      <p id="translation">---</p>
+    </div>
   </main>
 
   <footer>
     <p>© 2025 Frontend English Trainer</p>
   </footer>
 
-  <!-- твой переключатель темы и прочее -->
+  <!-- НИКАКИХ встроенных <script> здесь — только app.js -->
   <script src="app.js"></script>
-
-  <!-- Локальная логика тренажёра -->
-  <script>
-    // Словарь: слово + транскрипция + перевод
-    const dictionary = [
-      { en: "function",  transcription: "/ˈfʌŋkʃn/",     ru: "функция" },
-      { en: "variable",  transcription: "/ˈveəriəbl/",   ru: "переменная" },
-      { en: "loop",      transcription: "/luːp/",        ru: "цикл" },
-      { en: "array",     transcription: "/əˈreɪ/",       ru: "массив" },
-      { en: "object",    transcription: "/ˈɒbdʒɪkt/",    ru: "объект" },
-      { en: "string",    transcription: "/strɪŋ/",       ru: "строка" },
-      { en: "number",    transcription: "/ˈnʌmbə/",      ru: "число" },
-      { en: "boolean",   transcription: "/ˈbuːliːən/",   ru: "логическое значение" },
-      { en: "return",    transcription: "/rɪˈtɜːn/",     ru: "вернуть" },
-      { en: "condition", transcription: "/kənˈdɪʃn/",    ru: "условие" }
-    ];
-
-    // Узлы интерфейса
-    const englishWord   = document.getElementById("englishWord");
-    const transcription = document.getElementById("transcription");
-    const translation   = document.getElementById("translation");
-    const newWordBtn    = document.getElementById("newWordBtn");
-
-    function pickRandomWord() {
-      const i = Math.floor(Math.random() * dictionary.length);
-      const item = dictionary[i];
-      englishWord.textContent   = item.en;
-      transcription.textContent = item.transcription || "";
-      translation.textContent   = item.ru || "";
-    }
-
-    newWordBtn.addEventListener("click", pickRandomWord);
-
-    // показать что-нибудь при загрузке
-    pickRandomWord();
-  </script>
-
-<script>
-  // --- Озвучка слова ---
-  const speakBtn = document.getElementById('speakBtn');
-
-  let voices = [];
-  function loadVoices() {
-    voices = window.speechSynthesis.getVoices() || [];
-  }
-  // некоторые браузеры загружают голоса асинхронно
-  window.speechSynthesis.onvoiceschanged = loadVoices;
-  loadVoices();
-
-  function speak(text) {
-    if (!text) return;
-    const utter = new SpeechSynthesisUtterance(text);
-
-    // Пытаемся выбрать английский голос
-    const enVoice =
-      voices.find(v => v.lang?.toLowerCase().startsWith('en-')) || null;
-    if (enVoice) utter.voice = enVoice;
-
-    utter.lang = enVoice?.lang || 'en-US';
-    utter.rate = 0.95;   // скорость (0.1–10)
-    utter.pitch = 1.0;   // тон (0–2)
-    utter.volume = 1.0;  // громкость (0–1)
-
-    window.speechSynthesis.cancel(); // сброс, если уже что-то играет
-    window.speechSynthesis.speak(utter);
-  }
-
-  speakBtn.addEventListener('click', () => {
-    const word = document.getElementById('englishWord')?.textContent?.trim();
-    speak(word);
-  });
-</script>
-
-
 </body>
 </html>
