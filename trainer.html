@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Тренажёр — Frontend English Trainer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Frontend + English</h1>
+    <nav>
+      <a href="index.html">Главная</a>
+      <a href="trainer.html">Тренажёр</a>
+    </nav>
+    <button id="themeToggle">🌙</button>
+  </header>
+
+  <main>
+    <h2>Тренажёр по английским словам</h2>
+    <p>Нажми кнопку, чтобы получить случайное слово для изучения.</p>
+    <button id="newWordBtn">Новое слово</button>
+
+    <div id="wordDisplay">
+      <h3 id="englishWord">---</h3>
+      <p id="translation">---</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 Frontend English Trainer</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const dictionary = [
+      { en: "function", ru: "функция" },
+      { en: "variable", ru: "переменная" },
+      { en: "loop", ru: "цикл" },
+      { en: "array", ru: "массив" },
+      { en: "object", ru: "объект" },
+      { en: "string", ru: "строка" },
+      { en: "number", ru: "число" },
+      { en: "boolean", ru: "логическое значение" },
+      { en: "return", ru: "вернуть" },
+      { en: "condition", ru: "условие" }
+    ];
+
+    const englishWord = document.getElementById("englishWord");
+    const translation = document.getElementById("translation");
+    const newWordBtn = document.getElementById("newWordBtn");
+
+    newWordBtn.addEventListener("click", () => {
+      const randomIndex = Math.floor(Math.random() * dictionary.length);
+      englishWord.textContent = dictionary[randomIndex].en;
+      translation.textContent = dictionary[randomIndex].ru;
+    });
+  </script>
+</body>
+</html>
