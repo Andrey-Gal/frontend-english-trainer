@@ -1,138 +1,142 @@
-// Мини-база уроков: по 2 примера на раздел (добавим больше позже)
-const LESSONS = {
+// === элементы страницы ===
+const tabs      = document.querySelectorAll('.tab');
+const edHtml    = document.getElementById('edHtml');
+const edCss     = document.getElementById('edCss');
+const edJs      = document.getElementById('edJs');
+const runBtn    = document.getElementById('runCode');
+const frame     = document.getElementById('resultFrame');
+
+const dictList  = document.getElementById('dictList');
+const dictSearch= document.getElementById('dictSearch');
+const dictTpl   = document.getElementById('dictItemTpl');
+
+let currentTopic = 'html';
+
+// === стартовые примеры для песочницы по темам ===
+const SAMPLES = {
+  html: {
+    html: `<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><title>Учусь HTML</title></head>
+<body>
+  <header>Это шапка</header>
+  <main>
+    <h1>Hello</h1>
+    <p>Это абзац текста.</p>
+  </main>
+  <footer>Это подвал</footer>
+</body></html>`,
+    css:  `body{font-family:Arial;padding:16px}
+header,footer{background:#eef;border-radius:8px;padding:8px}
+h1{color:#2a7}`,
+    js:   ``,
+  },
+  css: {
+    html: `<div class="card">Карточка</div>`,
+    css:  `.card{margin:16px;padding:12px;background:#fff;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.08)}`,
+    js:   ``,
+  },
+  js: {
+    html: `<button id="b">Нажми</button><div id="out"></div>`,
+    css:  `#out{margin-top:8px;font-family:Arial}`,
+    js:   `function greet(name){return \`Hello, \${name}!\`}
+document.getElementById('b').onclick=()=>{
+  document.getElementById('out').textContent=greet('World')
+}`,
+  }
+};
+
+// === мини-словарь по темам ===
+const DICTS = {
   html: [
-    {
-      title: "Базовая разметка",
-      term: { en: "element", ipa: "/ˈelɪmənt/", ru: "элемент" },
-      html: "<h1>Hello</h1><p>Это HTML element.</p>",
-      css:  "body{font-family:Arial}",
-      js:   "",
-      explain: "Элемент (element) — базовый строительный блок HTML. Заголовки, абзацы, div — всё элементы."
-    },
-    {
-      title: "Атрибуты",
-      term: { en: "attribute", ipa: "/ˈætrɪbjuːt/", ru: "атрибут" },
-      html: '<img src="https://picsum.photos/200" alt="random" width="200">',
-      css:  "img{border-radius:12px}",
-      js:   "",
-      explain: "Атрибут (attribute) уточняет элемент: src, alt, width и т.д."
-    },
+    { en:'markup',   ipa:'/ˈmɑːkʌp/',    ru:'разметка',     tag:'HTML' },
+    { en:'element',  ipa:'/ˈelɪmənt/',   ru:'элемент',      tag:'HTML' },
+    { en:'attribute',ipa:'/ˈætrɪbjuːt/', ru:'атрибут',      tag:'HTML' },
+    { en:'header',   ipa:'/ˈhedə(r)/',   ru:'шапка',        tag:'layout' },
+    { en:'main',     ipa:'/meɪn/',       ru:'основная часть',tag:'layout' },
+    { en:'footer',   ipa:'/ˈfʊtə(r)/',   ru:'подвал',       tag:'layout' }
   ],
   css: [
-    {
-      title: "Отступы",
-      term: { en: "margin", ipa: "/ˈmɑːdʒɪn/", ru: "внешний отступ" },
-      html: '<div class="card">Карточка</div>',
-      css:  ".card{margin:16px;padding:12px;background:#fff;border-radius:10px}",
-      js:   "",
-      explain: "Margin — внешний отступ снаружи элемента."
-    },
-    {
-      title: "Флекс-контейнер",
-      term: { en: "flexbox", ipa: "/ˈfleksbɒks/", ru: "флексбокс" },
-      html: '<div class="row"><div>1</div><div>2</div><div>3</div></div>',
-      css:  ".row{display:flex;gap:12px} .row>div{background:#eef;padding:10px;border-radius:8px}",
-      js:   "",
-      explain: "Flexbox — способ раскладки элементов в строку/колонку."
-    },
+    { en:'selector', ipa:'/sɪˈlektə/',   ru:'селектор',     tag:'CSS' },
+    { en:'margin',   ipa:'/ˈmɑːdʒɪn/',   ru:'внешний отступ',tag:'CSS' },
+    { en:'padding',  ipa:'/ˈpædɪŋ/',     ru:'внутренний отступ', tag:'CSS' },
+    { en:'flexbox',  ipa:'/ˈfleksbɒks/', ru:'флексбокс',    tag:'CSS' }
   ],
   js: [
-    {
-      title: "Функция",
-      term: { en: "function", ipa: "/ˈfʌŋkʃn/", ru: "функция" },
-      html: '<button id="b">Нажми</button><div id="out"></div>',
-      css:  "#out{margin-top:8px}",
-      js:   "function greet(name){return `Hello, ${name}!`}\n" +
-            "document.getElementById('b').onclick=()=>{\n" +
-            "  document.getElementById('out').textContent=greet('World')\n" +
-            "}",
-      explain: "Function — переиспользуемый блок кода, который можно вызывать."
-    },
-    {
-      title: "Массив",
-      term: { en: "array", ipa: "/əˈreɪ/", ru: "массив" },
-      html: '<div id="list"></div>',
-      css:  "#list{display:flex;gap:8px}",
-      js:   "const arr=[1,2,3];\n" +
-            "document.getElementById('list').textContent=arr.join(' - ')",
-      explain: "Array — упорядоченная коллекция значений."
-    },
+    { en:'function', ipa:'/ˈfʌŋkʃn/',    ru:'функция',      tag:'JS' },
+    { en:'array',    ipa:'/əˈreɪ/',      ru:'массив',       tag:'JS' },
+    { en:'loop',     ipa:'/luːp/',       ru:'цикл',         tag:'JS' }
   ]
 };
 
-// Элементы UI
-const lessonList = document.getElementById("lessonList");
-const edHtml = document.getElementById("edHtml");
-const edCss  = document.getElementById("edCss");
-const edJs   = document.getElementById("edJs");
-const runBtn = document.getElementById("runBtn");
-const preview = document.getElementById("preview");
-const speakTermBtn = document.getElementById("speakTermBtn");
+// === рендер словаря ===
+function renderDict(list){
+  if (!dictList || !dictTpl) return;
+  dictList.innerHTML = '';
+  list.forEach(item => {
+    const node = dictTpl.content.cloneNode(true);
+    node.querySelector('.en').textContent  = item.en;
+    node.querySelector('.ipa').textContent = item.ipa || '';
+    node.querySelector('.ru').textContent  = item.ru  || '';
+    node.querySelector('.tag').textContent = item.tag || '';
 
-const termEn = document.getElementById("termEn");
-const termIpa = document.getElementById("termIpa");
-const termRu = document.getElementById("termRu");
-const explainText = document.getElementById("explainText");
+    // озвучка — используем speak из app.js
+    node.querySelector('.speak').addEventListener('click', () => {
+      if (typeof speak === 'function') speak(item.en);
+    });
 
-let currentCat = "html";
-let currentIdx = 0;
-
-function renderLessonList() {
-  lessonList.innerHTML = "";
-  LESSONS[currentCat].forEach((l, i) => {
-    const li = document.createElement("li");
-    li.textContent = l.title;
-    li.className = i === currentIdx ? "active" : "";
-    li.onclick = () => { currentIdx = i; renderLessonList(); loadLesson(); };
-    lessonList.appendChild(li);
+    dictList.appendChild(node);
   });
 }
+function filterDict(topic, q){
+  q = (q||'').trim().toLowerCase();
+  const base = DICTS[topic] || [];
+  if (!q) return base;
+  return base.filter(it =>
+    it.en.toLowerCase().includes(q) ||
+    (it.ru||'').toLowerCase().includes(q) ||
+    (it.tag||'').toLowerCase().includes(q)
+  );
+}
 
-function loadLesson() {
-  const l = LESSONS[currentCat][currentIdx];
-  edHtml.value = l.html;
-  edCss.value  = l.css;
-  edJs.value   = l.js;
-  termEn.textContent = l.term.en;
-  termIpa.textContent = l.term.ipa || "";
-  termRu.textContent  = l.term.ru || "";
-  explainText.textContent = l.explain || "";
+// === подстановка примеров в редакторы и рендер словаря ===
+function applyTopic(topic){
+  currentTopic = topic;
+  // активная вкладка
+  document.querySelectorAll('.tab').forEach(b=>{
+    b.classList.toggle('active', b.dataset.topic === topic);
+  });
+  // редакторы
+  const s = SAMPLES[topic];
+  if (edHtml) edHtml.value = s.html || '';
+  if (edCss)  edCss.value  = s.css  || '';
+  if (edJs)   edJs.value   = s.js   || '';
+  // словарь
+  renderDict(filterDict(topic, dictSearch?.value));
+  // автозапуск предпросмотра
   runPreview();
 }
 
-function runPreview() {
-  const html = `
-<!doctype html>
-<html><head>
-<meta charset="utf-8">
-<style>${edCss.value}</style>
-</head><body>
-${edHtml.value}
-<script>
-${edJs.value}
-</script>
-</body></html>`;
-  preview.srcdoc = html;
+// === запуск кода в iframe ===
+function runPreview(){
+  if (!frame) return;
+  const css  = `<style>${edCss?.value || ''}</style>`;
+  const js   = `<script>(function(){try{${edJs?.value || ''}}catch(e){console.error(e)}})();<\/script>`;
+  const html = `${edHtml?.value || ''}\n${css}\n${js}`;
+  const doc = frame.contentDocument || frame.contentWindow?.document;
+  doc.open(); doc.write(html); doc.close();
 }
 
-// Переключение вкладок HTML/CSS/JS
-document.querySelectorAll(".tab-btn").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    currentCat = btn.dataset.cat;
-    currentIdx = 0;
-    renderLessonList();
-    loadLesson();
+// обработчики
+tabs.forEach(btn=>{
+  btn.addEventListener('click', () => applyTopic(btn.dataset.topic));
+});
+if (runBtn) runBtn.addEventListener('click', runPreview);
+if (dictSearch){
+  dictSearch.addEventListener('input', () => {
+    renderDict(filterDict(currentTopic, dictSearch.value));
   });
-});
+}
 
-// Кнопки
-runBtn.addEventListener("click", runPreview);
-speakTermBtn.addEventListener("click", ()=>{
-  if (typeof speak === "function") speak(termEn.textContent.trim());
-});
-
-// Старт
-renderLessonList();
-loadLesson();
+// старт
+applyTopic(currentTopic);
