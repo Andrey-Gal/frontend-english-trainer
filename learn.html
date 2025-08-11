@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Учебник фронтенда — Модуль 1: HTML</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header class="site-header">
+  <h1>Frontend + English</h1>
+  <nav>
+  <button id="themeToggle">🌙</button>
+  <a href="index.html">Главная</a>
+  <a href="learn.html">Учебник</a>
+  <a href="trainer.html">Тренажёр</a>
+</nav>
+
+  <button id="themeToggle" title="Светлая/тёмная тема">🌙</button>
+</header>
+
+<main class="learn">
+  <!-- Вкладки: сейчас активна HTML -->
+  <div class="learn-tabs">
+    <button class="tab active" data-topic="html">HTML</button>
+    <button class="tab" data-topic="css" disabled>CSS</button>
+    <button class="tab" data-topic="js" disabled>JS</button>
+  </div>
+
+  <!-- Три зоны: Теория | Словарь | Песочница -->
+  <section class="learn-grid">
+    <!-- Левая колонка — теория -->
+    <article class="panel theory" id="theory">
+      <h2>Модуль 1 — HTML: базовая разметка</h2>
+
+      <h3>Что такое HTML?</h3>
+      <p><b>HTML</b> — это язык разметки. Он описывает структуру страницы: заголовки, абзацы, списки, изображения, ссылки и т.д.</p>
+
+      <h3>Минимальный скелет документа</h3>
+      <pre class="code"><code>&lt;!doctype html&gt;
+&lt;html lang="ru"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Моя страница&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    Контент страницы
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <h3>Шапка, тело, подвал</h3>
+      <ul>
+        <li><code>&lt;header&gt;</code> — «шапка»: логотип, меню, заголовок.</li>
+        <li><code>&lt;main&gt;</code> — основной контент страницы.</li>
+        <li><code>&lt;footer&gt;</code> — «подвал»: копирайт, контакты, ссылки.</li>
+      </ul>
+
+      <h3>Абзацы и заголовки</h3>
+      <p>Текстовые блоки — это <code>&lt;p&gt;</code> (paragraph, «абзац»). Заголовки — теги <code>&lt;h1&gt;</code>…<code>&lt;h6&gt;</code> от самого важного к менее важным.</p>
+
+      <h3>Задание</h3>
+      <ol>
+        <li>Собери скелет HTML в редакторе ниже.</li>
+        <li>Внутри <code>&lt;body&gt;</code> добавь <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;footer&gt;</code>.</li>
+        <li>В <code>&lt;main&gt;</code> создай заголовок <code>&lt;h1&gt;</code> и пару абзацев <code>&lt;p&gt;</code>.</li>
+        <li>Нажми «Запустить» и посмотри результат справа в «Результате».</li>
+      </ol>
+    </article>
+
+    <!-- Правая верхняя — словарь терминов -->
+    <aside class="panel dict">
+      <h3>Словарь по теме</h3>
+
+      <div class="dict-filters">
+        <input id="dictSearch" type="search" placeholder="Найти термин…" />
+      </div>
+
+      <ul id="dictList" class="dict-list">
+        <!-- Заполняется из app.js (dictionary_html) -->
+      </ul>
+
+      <template id="dictItemTpl">
+        <li class="dict-item">
+          <div class="word">
+            <span class="en"></span>
+            <span class="ipa"></span>
+            <button class="speak" title="Прослушать">🔊</button>
+          </div>
+          <div class="ru"></div>
+          <div class="tag"></div>
+        </li>
+      </template>
+    </aside>
+
+    <!-- Нижняя большая — песочница (HTML/CSS/JS + результат) -->
+    <section class="panel sandbox">
+      <div class="sandbox-top">
+        <div class="sandbox-editors">
+          <div class="editor">
+            <div class="editor-title">HTML</div>
+            <textarea id="edHtml" spellcheck="false">&lt;!doctype html&gt;
+&lt;html lang="ru"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Учусь HTML&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;header&gt;Это шапка&lt;/header&gt;
+    &lt;main&gt;
+      &lt;h1&gt;Hello&lt;/h1&gt;
+      &lt;p&gt;Это абзац текста.&lt;/p&gt;
+    &lt;/main&gt;
+    &lt;footer&gt;Это подвал&lt;/footer&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</textarea>
+          </div>
+
+          <div class="editor">
+            <div class="editor-title">CSS</div>
+            <textarea id="edCss" spellcheck="false">body{font-family:Arial;padding:16px}
+header,footer{background:#eef;border-radius:8px;padding:8px}
+h1{color:#2a7}</textarea>
+          </div>
+
+          <div class="editor">
+            <div class="editor-title">JS</div>
+            <textarea id="edJs" spellcheck="false">console.log('Привет из JS!')</textarea>
+          </div>
+        </div>
+
+        <div class="sandbox-actions">
+          <button id="runCode" class="btn btn-primary">Запустить</button>
+        </div>
+      </div>
+
+      <div class="sandbox-output">
+        <iframe id="resultFrame" title="Результат"></iframe>
+      </div>
+    </section>
+  </section>
+</main>
+
+<footer class="site-footer">
+  © 2025 Frontend English Trainer
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

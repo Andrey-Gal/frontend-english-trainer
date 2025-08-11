@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Словарь — Frontend English Trainer</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header>
+  <h1>Frontend + English</h1>
+  <nav>
+    <a href="index.html">Главная</a>
+    <a href="learn.html">Учебник</a>
+    <a href="dictionary.html">Словарь</a>
+    <a href="trainer.html">Тренажёр</a>
+  </nav>
+  <button id="themeToggle">🌙</button>
+</header>
+
+<main class="dictionary">
+  <h2>Словарь по HTML / CSS / JS</h2>
+
+  <div class="filters">
+    <input id="q" placeholder="Поиск (en/ru)"/>
+    <select id="cat">
+      <option value="all">Все разделы</option>
+      <option value="html">HTML</option>
+      <option value="css">CSS</option>
+      <option value="js">JS</option>
+    </select>
+  </div>
+
+  <ul id="dictList" class="dict-list"></ul>
+</main>
+
+<footer><p>© 2025 Frontend English Trainer</p></footer>
+
+<script src="app.js"></script>
+<script src="dictionary.js"></script>
+</body>
+</html>
