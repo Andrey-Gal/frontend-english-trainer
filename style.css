@@ -122,3 +122,61 @@ body.dark .dict-item{background:#161616;border-color:#2a2a2a}
 }
 .home-cards .card:hover{ transform: translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,.06); }
 body.dark .home-cards .card{ background:#1f1f1f; border-color:#333; }
+
+/* ===== Адаптив ===== */
+
+/* Планшеты и уже */
+@media (max-width: 900px) {
+  /* Шапка */
+  header { padding: 12px 10px; }
+  header nav { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+  header nav a { padding: 6px 10px; border:1px solid rgba(255,255,255,.25); border-radius:10px; }
+
+  /* Вкладки HTML/CSS/JS сверху */
+  .learn-tabs { gap:10px; justify-content:center; }
+  .tab { padding:10px 14px; font-size:16px; }
+
+  /* Сетка учебника: в одну колонку */
+  .learn-grid{
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+  .theory{ grid-column:1/2; grid-row:1/2; }
+  .dict  { grid-column:1/2; grid-row:2/3; max-height:none; }
+  .sandbox{ grid-column:1/2; grid-row:3/4; }
+
+  /* Редакторы кода — один под другим */
+  .sandbox-editors{ grid-template-columns:1fr; }
+  textarea{ min-height:200px; }
+
+  /* Кнопки крупнее */
+  .btn{ width:100%; }
+  .sandbox-actions{ justify-content:center; }
+  #resultFrame{ height:320px; }
+
+  /* Список терминов — комфортные отступы */
+  .dict-item{ padding:12px; }
+  .dict-item .word{ gap:10px; }
+}
+
+/* Телефоны узкие */
+@media (max-width: 480px) {
+  h1 { font-size: 22px; }
+  h2 { font-size: 18px; }
+  .tab{ padding:10px 12px; font-size:15px; }
+
+  /* Карточки на главной — по одной в ряд */
+  .home-cards{
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 0 12px;
+  }
+
+  /* Тренажёр слов */
+  #wordDisplay{ gap:10px; flex-wrap:wrap; justify-content:center; }
+  #speakBtn{ padding:8px 12px; }
+
+  /* Прокрутка длинного словаря */
+  .dict-list{ gap:8px; }
+  .dict-item{ border-radius:12px; }
+}
