@@ -1,142 +1,79 @@
-// === элементы страницы ===
-const tabs      = document.querySelectorAll('.tab');
-const edHtml    = document.getElementById('edHtml');
-const edCss     = document.getElementById('edCss');
-const edJs      = document.getElementById('edJs');
-const runBtn    = document.getElementById('runCode');
-const frame     = document.getElementById('resultFrame');
+// ---- Теория по разделам (минимум контента — будем расширять) ----
+const THEORY = {
+  html: `
+    <h2>Модуль 1 — HTML: базовая разметка</h2>
+    <h3>Что такое HTML?</h3>
+    <p><b>HTML</b> — язык разметки. Описывает структуру страницы.</p>
 
-const dictList  = document.getElementById('dictList');
-const dictSearch= document.getElementById('dictSearch');
-const dictTpl   = document.getElementById('dictItemTpl');
+    <h3>Минимальный скелет документа</h3>
+<pre class="code"><code>&lt;!doctype html&gt;
+&lt;html lang="ru"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Моя страница&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;Контент&lt;/body&gt;
+&lt;/html&gt;</code></pre>
 
-let currentTopic = 'html';
+    <h3>Шапка, тело, подвал</h3>
+    <ul>
+      <li><code>&lt;header&gt;</code> — шапка</li>
+      <li><code>&lt;main&gt;</code> — основной контент</li>
+      <li><code>&lt;footer&gt;</code> — подвал</li>
+    </ul>
+  `,
+  css: `
+    <h2>Модуль 2 — CSS: стилизация</h2>
+    <h3>Что такое CSS?</h3>
+    <p><b>CSS</b> — язык описания внешнего вида: цвета, шрифты, отступы, сетки.</p>
 
-// === стартовые примеры для песочницы по темам ===
-const SAMPLES = {
-  html: {
-    html: `<!doctype html>
-<html lang="ru">
-<head><meta charset="utf-8"><title>Учусь HTML</title></head>
-<body>
-  <header>Это шапка</header>
-  <main>
-    <h1>Hello</h1>
-    <p>Это абзац текста.</p>
-  </main>
-  <footer>Это подвал</footer>
-</body></html>`,
-    css:  `body{font-family:Arial;padding:16px}
-header,footer{background:#eef;border-radius:8px;padding:8px}
-h1{color:#2a7}`,
-    js:   ``,
-  },
-  css: {
-    html: `<div class="card">Карточка</div>`,
-    css:  `.card{margin:16px;padding:12px;background:#fff;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.08)}`,
-    js:   ``,
-  },
-  js: {
-    html: `<button id="b">Нажми</button><div id="out"></div>`,
-    css:  `#out{margin-top:8px;font-family:Arial}`,
-    js:   `function greet(name){return \`Hello, \${name}!\`}
-document.getElementById('b').onclick=()=>{
-  document.getElementById('out').textContent=greet('World')
-}`,
-  }
+    <h3>Правило CSS</h3>
+<pre class="code"><code>селектор { свойство: значение; }</code></pre>
+
+    <h3>Базовые свойства</h3>
+    <ul>
+      <li><code>color</code> — цвет текста</li>
+      <li><code>background</code> — фон</li>
+      <li><code>margin / padding</code> — внешние/внутренние отступы</li>
+      <li><code>display</code> — block, inline, flex, grid</li>
+    </ul>
+  `,
+  js: `
+    <h2>Модуль 3 — JavaScript: логика</h2>
+    <h3>Что такое JS?</h3>
+    <p><b>JavaScript</b> — добавляет интерактив: события, работа с DOM, запросы.</p>
+
+    <h3>Переменные и функции</h3>
+<pre class="code"><code>const name = 'Andrey';
+function hi(n){ return 'Hello, ' + n; }
+console.log(hi(name));</code></pre>
+
+    <h3>DOM</h3>
+    <p><code>document.getElementById</code>, <code>addEventListener</code>, <code>classList</code> — ключевые инструменты.</p>
+  `
 };
 
-// === мини-словарь по темам ===
-const DICTS = {
-  html: [
-    { en:'markup',   ipa:'/ˈmɑːkʌp/',    ru:'разметка',     tag:'HTML' },
-    { en:'element',  ipa:'/ˈelɪmənt/',   ru:'элемент',      tag:'HTML' },
-    { en:'attribute',ipa:'/ˈætrɪbjuːt/', ru:'атрибут',      tag:'HTML' },
-    { en:'header',   ipa:'/ˈhedə(r)/',   ru:'шапка',        tag:'layout' },
-    { en:'main',     ipa:'/meɪn/',       ru:'основная часть',tag:'layout' },
-    { en:'footer',   ipa:'/ˈfʊtə(r)/',   ru:'подвал',       tag:'layout' }
-  ],
-  css: [
-    { en:'selector', ipa:'/sɪˈlektə/',   ru:'селектор',     tag:'CSS' },
-    { en:'margin',   ipa:'/ˈmɑːdʒɪn/',   ru:'внешний отступ',tag:'CSS' },
-    { en:'padding',  ipa:'/ˈpædɪŋ/',     ru:'внутренний отступ', tag:'CSS' },
-    { en:'flexbox',  ipa:'/ˈfleksbɒks/', ru:'флексбокс',    tag:'CSS' }
-  ],
-  js: [
-    { en:'function', ipa:'/ˈfʌŋkʃn/',    ru:'функция',      tag:'JS' },
-    { en:'array',    ipa:'/əˈreɪ/',      ru:'массив',       tag:'JS' },
-    { en:'loop',     ipa:'/luːp/',       ru:'цикл',         tag:'JS' }
-  ]
-};
+// ---- Переключение вкладок теории + синхронизация словаря ----
+const theoryEl   = document.getElementById('theory');
+const theoryTabs = document.querySelectorAll('.learn-tabs .tab');
+const dictTabs   = document.querySelectorAll('.dict-tabs .dict-tab');
 
-// === рендер словаря ===
-function renderDict(list){
-  if (!dictList || !dictTpl) return;
-  dictList.innerHTML = '';
-  list.forEach(item => {
-    const node = dictTpl.content.cloneNode(true);
-    node.querySelector('.en').textContent  = item.en;
-    node.querySelector('.ipa').textContent = item.ipa || '';
-    node.querySelector('.ru').textContent  = item.ru  || '';
-    node.querySelector('.tag').textContent = item.tag || '';
+function setTopic(topic){
+  // 1) Теория
+  if (theoryEl) theoryEl.innerHTML = THEORY[topic] || '';
 
-    // озвучка — используем speak из app.js
-    node.querySelector('.speak').addEventListener('click', () => {
-      if (typeof speak === 'function') speak(item.en);
-    });
+  // 2) Подсветка табов теории
+  theoryTabs.forEach(t => t.classList.toggle('active', t.dataset.topic === topic));
 
-    dictList.appendChild(node);
-  });
-}
-function filterDict(topic, q){
-  q = (q||'').trim().toLowerCase();
-  const base = DICTS[topic] || [];
-  if (!q) return base;
-  return base.filter(it =>
-    it.en.toLowerCase().includes(q) ||
-    (it.ru||'').toLowerCase().includes(q) ||
-    (it.tag||'').toLowerCase().includes(q)
-  );
-}
-
-// === подстановка примеров в редакторы и рендер словаря ===
-function applyTopic(topic){
-  currentTopic = topic;
-  // активная вкладка
-  document.querySelectorAll('.tab').forEach(b=>{
-    b.classList.toggle('active', b.dataset.topic === topic);
-  });
-  // редакторы
-  const s = SAMPLES[topic];
-  if (edHtml) edHtml.value = s.html || '';
-  if (edCss)  edCss.value  = s.css  || '';
-  if (edJs)   edJs.value   = s.js   || '';
-  // словарь
-  renderDict(filterDict(topic, dictSearch?.value));
-  // автозапуск предпросмотра
-  runPreview();
-}
-
-// === запуск кода в iframe ===
-function runPreview(){
-  if (!frame) return;
-  const css  = `<style>${edCss?.value || ''}</style>`;
-  const js   = `<script>(function(){try{${edJs?.value || ''}}catch(e){console.error(e)}})();<\/script>`;
-  const html = `${edHtml?.value || ''}\n${css}\n${js}`;
-  const doc = frame.contentDocument || frame.contentWindow?.document;
-  doc.open(); doc.write(html); doc.close();
-}
-
-// обработчики
-tabs.forEach(btn=>{
-  btn.addEventListener('click', () => applyTopic(btn.dataset.topic));
-});
-if (runBtn) runBtn.addEventListener('click', runPreview);
-if (dictSearch){
-  dictSearch.addEventListener('input', () => {
-    renderDict(filterDict(currentTopic, dictSearch.value));
+  // 3) Синхронизируем вкладки словаря и запускаем их логику (рендер в app.js)
+  dictTabs.forEach(b => {
+    const isMatch = b.dataset.topic === topic;
+    b.classList.toggle('active', isMatch);
+    if (isMatch) b.dispatchEvent(new Event('click', { bubbles:true }));
   });
 }
 
-// старт
-applyTopic(currentTopic);
+theoryTabs.forEach(t => t.addEventListener('click', () => setTopic(t.dataset.topic)));
+
+// Старт: HTML
+setTopic('html');
