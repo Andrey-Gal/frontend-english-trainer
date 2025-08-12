@@ -16,16 +16,11 @@
   <a href="trainer.html">Тренажёр</a>
 </nav>
 
-  
+
 </header>
 
 <main class="learn">
-  <!-- Вкладки: сейчас активна HTML -->
-  <div class="learn-tabs">
-  <button class="tab active" data-topic="html">HTML</button>
-  <button class="tab" data-topic="css">CSS</button>
-  <button class="tab" data-topic="js">JS</button>
-</div>
+
 
 
   <!-- Три зоны: Теория | Словарь | Песочница -->
@@ -70,28 +65,33 @@
 
     <!-- Правая верхняя — словарь терминов -->
     <aside class="panel dict">
-      <h3>Словарь по теме</h3>
+  <h3>Словарь по теме</h3>
 
-      <div class="dict-filters">
-        <input id="dictSearch" type="search" placeholder="Найти термин…" />
+  <!-- Вкладки ПЕРЕЕХАЛИ сюда -->
+  <div class="dict-tabs">
+    <button class="dict-tab active" data-topic="html">HTML</button>
+    <button class="dict-tab" data-topic="css">CSS</button>
+    <button class="dict-tab" data-topic="js">JS</button>
+  </div>
+
+  <div class="dict-filters">
+    <input id="dictSearch" type="search" placeholder="Найти термин…" />
+  </div>
+
+  <ul id="dictList" class="dict-list"></ul>
+
+  <template id="dictItemTpl">
+    <li class="dict-item">
+      <div class="word">
+        <span class="en"></span>
+        <span class="ipa"></span>
+        <button class="speak" title="Прослушать">🔊</button>
       </div>
-
-      <ul id="dictList" class="dict-list">
-        <!-- Заполняется из app.js (dictionary_html) -->
-      </ul>
-
-      <template id="dictItemTpl">
-        <li class="dict-item">
-          <div class="word">
-            <span class="en"></span>
-            <span class="ipa"></span>
-            <button class="speak" title="Прослушать">🔊</button>
-          </div>
-          <div class="ru"></div>
-          <div class="tag"></div>
-        </li>
-      </template>
-    </aside>
+      <div class="ru"></div>
+      <div class="tag"></div>
+    </li>
+  </template>
+</aside>
 
     <!-- Нижняя большая — песочница (HTML/CSS/JS + результат) -->
     <section class="panel sandbox">

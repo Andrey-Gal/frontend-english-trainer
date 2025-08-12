@@ -78,63 +78,96 @@ if (speakBtn)   speakBtn.addEventListener('click', () => speak(wordEl?.textConte
 // показать слово при открытии тренажёра
 showRandomWord().catch(console.error);
 
-/* ====== Учебник: словарь для HTML базовой разметки ====== */
-const dictionary_html = [
-  { en: "markup",        ipa: "/ˈmɑːkʌp/",      ru: "разметка", tag: "HTML" },
-  { en: "element",       ipa: "/ˈelɪmənt/",     ru: "элемент", tag: "HTML" },
-  { en: "attribute",     ipa: "/ˈætrɪbjuːt/",   ru: "атрибут", tag: "HTML" },
-  { en: "header",        ipa: "/ˈhedə(r)/",     ru: "шапка", tag: "layout" },
-  { en: "main",          ipa: "/meɪn/",         ru: "основная область", tag: "layout" },
-  { en: "footer",        ipa: "/ˈfʊtə(r)/",     ru: "подвал", tag: "layout" },
-  { en: "paragraph",     ipa: "/ˈpærəɡrɑːf/",   ru: "абзац", tag: "text" },
-  { en: "heading",       ipa: "/ˈhedɪŋ/",       ru: "заголовок", tag: "text" },
-  { en: "doctype",       ipa: "/ˈdɒktaɪp/",     ru: "тип документа", tag: "meta" },
-  { en: "metadata",      ipa: "/ˈmetəˌdeɪtə/",  ru: "метаданные", tag: "meta" },
-  { en: "language",      ipa: "/ˈlæŋɡwɪdʒ/",    ru: "язык", tag: "meta" }
+/* ====== СЛОВАРИ: HTML / CSS / JS ====== */
+const DICT_HTML = [
+  { en:"markup",    ipa:"/ˈmɑːkʌp/",     ru:"разметка",           tag:"HTML" },
+  { en:"element",   ipa:"/ˈelɪmənt/",    ru:"элемент",            tag:"HTML" },
+  { en:"attribute", ipa:"/ˈætrɪbjuːt/",  ru:"атрибут",            tag:"HTML" },
+  { en:"header",    ipa:"/ˈhedə(r)/",    ru:"шапка",              tag:"layout" },
+  { en:"main",      ipa:"/meɪn/",        ru:"основная область",   tag:"layout" },
+  { en:"footer",    ipa:"/ˈfʊtə(r)/",    ru:"подвал",             tag:"layout" },
+  { en:"paragraph", ipa:"/ˈpærəɡrɑːf/",  ru:"абзац",              tag:"text" },
+  { en:"heading",   ipa:"/ˈhedɪŋ/",      ru:"заголовок",          tag:"text" },
+  { en:"doctype",   ipa:"/ˈdɒktaɪp/",    ru:"тип документа",      tag:"meta" },
+  { en:"metadata",  ipa:"/ˈmetəˌdeɪtə/", ru:"метаданные",         tag:"meta" },
+  { en:"language",  ipa:"/ˈlæŋɡwɪdʒ/",   ru:"язык",               tag:"meta" },
 ];
 
-/* ====== Рендер словаря и фильтрация ====== */
-(function initLearnPage(){
-  const dictList = document.getElementById('dictList');
-  const dictSearch = document.getElementById('dictSearch');
-  const dictTpl = document.getElementById('dictItemTpl');
+const DICT_CSS = [
+  { en:"selector",  ipa:"/sɪˈlektə(r)/", ru:"селектор",           tag:"CSS" },
+  { en:"property",  ipa:"/ˈprɒpəti/",    ru:"свойство",           tag:"CSS" },
+  { en:"value",     ipa:"/ˈvæljuː/",     ru:"значение",           tag:"CSS" },
+  { en:"margin",    ipa:"/ˈmɑːdʒɪn/",    ru:"внешний отступ",     tag:"layout" },
+  { en:"padding",   ipa:"/ˈpædɪŋ/",      ru:"внутренний отступ",  tag:"layout" },
+  { en:"flexbox",   ipa:"/ˈfleksbɒks/",  ru:"флексбокс",          tag:"layout" },
+  { en:"grid",      ipa:"/ɡrɪd/",        ru:"грид",               tag:"layout" },
+];
 
-  if (!dictList || !dictTpl) return; // мы не на learn.html
+const DICT_JS = [
+  { en:"variable",  ipa:"/ˈveəriəbl/",   ru:"переменная",         tag:"JS" },
+  { en:"function",  ipa:"/ˈfʌŋkʃn/",     ru:"функция",            tag:"JS" },
+  { en:"array",     ipa:"/əˈreɪ/",       ru:"массив",             tag:"JS" },
+  { en:"object",    ipa:"/ˈɒbdʒɪkt/",    ru:"объект",             tag:"JS" },
+  { en:"loop",      ipa:"/luːp/",        ru:"цикл",               tag:"JS" },
+  { en:"condition", ipa:"/kənˈdɪʃn/",    ru:"условие",            tag:"JS" },
+];
 
-  let current = dictionary_html.slice();
+/* ====== Рендер словаря + вкладки внутри блока словаря ====== */
+(function initLearnDict(){
+  const dictPanel = document.querySelector('.panel.dict');
+  if (!dictPanel) return;               // мы не на learn.html
 
-  function render(list){
-    dictList.innerHTML = '';
-    list.forEach(item => {
-      const clone = dictTpl.content.cloneNode(true);
-      clone.querySelector('.en').textContent = item.en;
-      clone.querySelector('.ipa').textContent = item.ipa || '';
-      clone.querySelector('.ru').textContent = item.ru;
-      clone.querySelector('.tag').textContent = item.tag || '';
+  const tabs   = dictPanel.querySelectorAll('.dict-tab');
+  const search = document.getElementById('dictSearch');
+  const list   = document.getElementById('dictList');
 
-      // озвучка
-      clone.querySelector('.speak').addEventListener('click', () => speak(item.en));
-      dictList.appendChild(clone);
+  const DATA = { html: DICT_HTML, css: DICT_CSS, js: DICT_JS };
+  let topic = 'html';
+
+  function match(item, q) {
+    const en = (item.en || '').toLowerCase();
+    const ru = (item.ru || '').toLowerCase();
+    const tg = (item.tag||'').toLowerCase();
+    return en.includes(q) || ru.includes(q) || tg.includes(q);
+  }
+
+  function render() {
+    const q = (search.value || '').trim().toLowerCase();
+    const src = DATA[topic] || [];
+    const filtered = q ? src.filter(it => match(it, q)) : src;
+
+    list.innerHTML = filtered.map(it => `
+      <li class="dict-item">
+        <div class="word">
+          <span class="en">${it.en}</span>
+          <span class="ipa">${it.ipa || ''}</span>
+          <button class="speak" type="button" data-word="${it.en}" title="Произнести">🔊</button>
+        </div>
+        <div class="ru">${it.ru || ''}</div>
+        <div class="tag">${(it.tag || '').toUpperCase()}</div>
+      </li>
+    `).join('') || `<li class="dict-item">Ничего не найдено</li>`;
+
+    // озвучка
+    list.querySelectorAll('.speak').forEach(btn=>{
+      btn.onclick = () => typeof speak === 'function' && speak(btn.dataset.word);
     });
   }
 
-  function filterByQuery(q){
-    q = q.trim().toLowerCase();
-    if (!q) return dictionary_html.slice();
-    return dictionary_html.filter(it =>
-      it.en.toLowerCase().includes(q) ||
-      (it.ru && it.ru.toLowerCase().includes(q)) ||
-      (it.tag && it.tag.toLowerCase().includes(q))
-    );
-  }
-
-  dictSearch.addEventListener('input', () => {
-    current = filterByQuery(dictSearch.value);
-    render(current);
+  // переключение вкладок словаря
+  tabs.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      tabs.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      topic = btn.dataset.topic;        // html | css | js
+      render();
+    });
   });
 
-  render(current);
+  search.addEventListener('input', render);
+  render();
 })();
+
 
 /* ====== Песочница: запуск кода в iframe ====== */
 (function initSandbox(){
