@@ -1,43 +1,35 @@
-const list = document.getElementById("dictList");
-const q = document.getElementById("q");
-const cat = document.getElementById("cat");
+// dictionary.js — глобальный словарь
+window.WORDS = [
+  { "category": "html", "en": "element", "ipa": "/ˈelɪmənt/", "ru": "элемент" },
+  { "category": "html", "en": "attribute", "ipa": "/ˈætrɪbjuːt/", "ru": "атрибут" },
+  { "category": "html", "en": "layout", "ipa": "/ˈleɪaʊt/", "ru": "макет" },
 
-let DICT = [];
+  { "category": "css", "en": "margin", "ipa": "/ˈmɑːdʒɪn/", "ru": "внешний отступ" },
+  { "category": "css", "en": "padding", "ipa": "/ˈpædɪŋ/", "ru": "внутренний отступ" },
+  { "category": "css", "en": "flexbox", "ipa": "/ˈfleksbɒks/", "ru": "флексбокс" },
 
-async function loadDict() {
-  const res = await fetch("dictionary.json");
-  DICT = await res.json();
-  render();
-}
+  { "category": "js", "en": "function", "ipa": "/ˈfʌŋkʃn/", "ru": "функция" },
+  { "category": "js", "en": "array", "ipa": "/əˈreɪ/", "ru": "массив" },
+  { "category": "js", "en": "conditional", "ipa": "/kənˈdɪʃənl/", "ru": "условие (ветвление)" },
 
-function render() {
-  const text = q.value.trim().toLowerCase();
-  const c = cat.value;
+  { "category": "css", "en": "property", "ipa": "/ˈprɒp.ə.ti/", "ru": "свойство" },
+  { "category": "css", "en": "value", "ipa": "/ˈvæl.juː/", "ru": "значение" },
+  { "category": "css", "en": "border", "ipa": "/ˈbɔːdə(r)/", "ru": "рамка" },
+  { "category": "css", "en": "display", "ipa": "/dɪˈspleɪ/", "ru": "режим отображения" },
+  { "category": "css", "en": "grid", "ipa": "/ɡrɪd/", "ru": "сетка (Grid)" },
+  { "category": "css", "en": "media query", "ipa": "/ˈmiːdiə ˈkwɪəri/", "ru": "медиазапрос" },
+  { "category": "css", "en": "cascade", "ipa": "/kæˈskeɪd/", "ru": "каскад" },
+  { "category": "css", "en": "specificity", "ipa": "/spəˈsɪfɪsɪti/", "ru": "специфичность" },
+  { "category": "css", "en": "inheritance", "ipa": "/ɪnˈherɪtəns/", "ru": "наследование" },
+  { "category": "css", "en": "box model", "ipa": "/bɒks ˈmɒdl̩/", "ru": "блочная модель" },
+  { "category": "css", "en": "stylesheet", "ipa": "/ˈstiːlʃiːt/", "ru": "таблица стилей" },
+  { "category": "css", "en": "responsive", "ipa": "/rɪˈspɒnsɪv/", "ru": "адаптивный" },
+  { "category": "css", "en": "hover", "ipa": "/ˈhʌvə(r)/", "ru": "состояние наведения" },
 
-  const items = DICT.filter(it =>
-    (c === "all" || it.category === c) &&
-    (
-      it.en.toLowerCase().includes(text) ||
-      (it.ru || "").toLowerCase().includes(text)
-    )
-  );
-
-  list.innerHTML = items.map(it => `
-    <li class="dict-item">
-      <span class="en">${it.en}</span>
-      <span class="ipa">${it.ipa || ""}</span>
-      <span class="ru">${it.ru || ""}</span>
-      <button class="speak" data-word="${it.en}">🔊</button>
-      <span class="tag">${it.category.toUpperCase()}</span>
-    </li>
-  `).join("");
-
-  list.querySelectorAll(".speak").forEach(b=>{
-    b.onclick = () => typeof speak === "function" && speak(b.dataset.word);
-  });
-}
-
-q.oninput = render;
-cat.onchange = render;
-
-loadDict().catch(console.error);
+  { "category": "communication", "en": "refactor", "ipa": "/ˌriːˈfæk.tər/", "ru": "рефакторить (улучшать код)" },
+  { "category": "communication", "en": "deadline", "ipa": "/ˈded.laɪn/", "ru": "дедлайн" },
+  { "category": "communication", "en": "priority", "ipa": "/praɪˈɒr.ə.ti/", "ru": "приоритет" },
+  { "category": "communication", "en": "blocker", "ipa": "/ˈblɒkə(r)/", "ru": "препятствие, блокер" },
+  { "category": "communication", "en": "meeting", "ipa": "/ˈmiːtɪŋ/", "ru": "встреча, созвон" },
+  { "category": "communication", "en": "feedback", "ipa": "/ˈfiːdbæk/", "ru": "обратная связь" }
+];
